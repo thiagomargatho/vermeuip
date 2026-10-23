@@ -104,6 +104,13 @@ window.vermeuip.speed = { run: function (onProgress) {
   function metrica(rotulo, valor, unidade) {
     var big = document.createElement('div');
     big.className = 'big';
+    if (valor !== '—') {
+      // clique copia so o numero (o app.js trata .copiavel); data-copia sobrepoe o texto com a unidade
+      big.className = 'big copiavel';
+      big.setAttribute('data-copia', valor);
+      big.setAttribute('tabindex', '0');
+      big.setAttribute('title', 'Clique para copiar');
+    }
     big.textContent = valor + ' ';
     var u = document.createElement('small');
     u.textContent = unidade;

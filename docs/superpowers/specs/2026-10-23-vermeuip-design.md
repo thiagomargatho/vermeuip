@@ -29,6 +29,15 @@ Página única, layout **A** (protótipo aprovado: `.superpowers/brainstorm/2545
 Aparência: clara, minimalista, muito espaço em branco, fonte do sistema,
 responsiva (celular incluso). Idioma: português do Brasil.
 
+Pedidos do dono depois da primeira versão:
+- **Rodapé profissional**: marca com frase curta, coluna "Ferramentas" (links que
+  abrem a aba certa), "Privacidade", "Contato" (+ atribuição DB-IP) e uma barra
+  inferior com © do ano corrente. Em uma coluna no celular.
+- **Clique já copia ("Ctrl+C")**: um clique no IP, no IP reverso, nas células das
+  tabelas de resultado (DNS, whois, portas) e nos números do teste de velocidade
+  copia o valor e mostra o aviso "Copiado: …". Funciona também com Enter/Espaço.
+  O colar (Ctrl+V) já é o do próprio navegador nos campos de texto.
+
 ## Não objetivos
 
 Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas

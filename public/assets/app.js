@@ -21,7 +21,9 @@
     var thead = el('thead', {}, [el('tr', {}, cabecalho.map(function (h) { return el('th', { text: h }); }))]);
     var tbody = el('tbody', {}, linhas.map(function (l) {
       return el('tr', {}, l.map(function (c) {
-        return c instanceof Node ? el('td', {}, [c]) : el('td', { text: c == null || c === '' ? '—' : String(c) });
+        if (c instanceof Node) return el('td', {}, [c]);
+        var vazio = c == null || c === '';
+        return el('td', vazio ? { text: '—' } : { text: String(c), 'class': 'copiavel', tabindex: '0', title: 'Clique para copiar' });
       }));
     }));
     return el('table', {}, [thead, tbody]);
@@ -59,13 +61,22 @@
 
   /* ---- abas ---- */
   var abas = $$('.tabs [role=tab]');
-  abas.forEach(function (aba) {
-    aba.addEventListener('click', function () {
-      abas.forEach(function (a) {
-        var ativa = a === aba;
-        a.setAttribute('aria-selected', ativa ? 'true' : 'false');
-        $('#' + a.getAttribute('aria-controls')).hidden = !ativa;
-      });
+  function ativarAba(aba) {
+    abas.forEach(function (a) {
+      var ativa = a === aba;
+      a.setAttribute('aria-selected', ativa ? 'true' : 'false');
+      $('#' + a.getAttribute('aria-controls')).hidden = !ativa;
+    });
+  }
+  abas.forEach(function (aba) { aba.addEventListener('click', function () { ativarAba(aba); }); });
+  // links do rodape levam direto para a ferramenta
+  $$('[data-aba]').forEach(function (link) {
+    link.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var aba = $('#aba-' + link.getAttribute('data-aba'));
+      ativarAba(aba);
+      $('.tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      aba.focus({ preventScroll: true });
     });
   });
 
@@ -95,13 +106,45 @@
   if (escuroSistema && escuroSistema.addEventListener) escuroSistema.addEventListener('change', mostrarTema);
   mostrarTema();
 
-  /* ---- copiar IP ---- */
-  var copiar = $('#copiar');
-  copiar.addEventListener('click', function () {
-    var ip = $('#ip').textContent.trim();
-    var ok = function () { copiar.textContent = 'Copiado ✓'; setTimeout(function () { copiar.textContent = 'Copiar IP'; }, 1400); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ip).then(ok);
+  /* ---- copiar: um clique em qualquer valor (IP, resultados, numeros) ja copia (o "Ctrl+C") ---- */
+  var aviso = $('#aviso'), avisoTimer = null;
+  function mostrarAviso(msg) {
+    aviso.textContent = msg;
+    aviso.hidden = false;
+    clearTimeout(avisoTimer);
+    avisoTimer = setTimeout(function () { aviso.hidden = true; }, 1600);
+  }
+  function copiarTexto(texto) {
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      return navigator.clipboard.writeText(texto);
+    }
+    return new Promise(function (ok, falha) {
+      var t = document.createElement('textarea');
+      t.value = texto; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      try { document.execCommand('copy') ? ok() : falha(); } catch (e) { falha(e); }
+      document.body.removeChild(t);
+    });
+  }
+  function copiarValor(texto) {
+    texto = String(texto).trim();
+    if (!texto || texto === '—') return;
+    copiarTexto(texto).then(
+      function () { mostrarAviso('Copiado: ' + texto); },
+      function () { mostrarAviso('Não foi possível copiar. Selecione e use Ctrl+C.'); }
+    );
+  }
+  // elementos copiaveis: .copiavel, e a celula/valor marcados no JS (data-copia sobrepoe o texto)
+  document.addEventListener('click', function (ev) {
+    var alvo = ev.target.closest('.copiavel, #ptr');
+    if (alvo) copiarValor(alvo.getAttribute('data-copia') || alvo.textContent);
   });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    var alvo = ev.target.closest && ev.target.closest('.copiavel, #ptr');
+    if (alvo) { ev.preventDefault(); copiarValor(alvo.getAttribute('data-copia') || alvo.textContent); }
+  });
+  $('#copiar').addEventListener('click', function () { copiarValor($('#ip').textContent); });
 
   /* ---- geolocalização (chega depois do IP) ---- */
   fetch('api/geo.php').then(function (r) { return r.json(); }).then(function (g) {

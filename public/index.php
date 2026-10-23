@@ -85,9 +85,9 @@ function e(string $s): string
 <main>
 <section class="hero" aria-labelledby="ip-label">
     <h1 class="rotulo" id="ip-label">Qual é o meu IP? <span>Seu endereço <?= $ipv6 ? 'IPv6' : 'IPv4' ?></span></h1>
-    <div class="ip" id="ip" data-clarity-mask="true"><?= $ip !== '' ? e($ip) : '—' ?></div>
+    <div class="ip copiavel" id="ip" data-clarity-mask="true" tabindex="0" role="button" title="Clique para copiar"><?= $ip !== '' ? e($ip) : '—' ?></div>
     <p class="muted" id="local" data-clarity-mask="true">Carregando localização…</p>
-    <p class="muted small" id="ptr-linha" data-clarity-mask="true" hidden>IP reverso: <span id="ptr"></span></p>
+    <p class="muted small" id="ptr-linha" data-clarity-mask="true" hidden>IP reverso: <span id="ptr" tabindex="0" role="button" title="Clique para copiar"></span></p>
     <div class="actions">
         <button class="btn" id="copiar" type="button">Copiar IP</button>
     </div>
@@ -151,12 +151,38 @@ function e(string $s): string
 </div>
 </main>
 
-<footer class="foot">
-    <p>Sem anúncios. Não guardamos o seu IP.</p>
-    <p>Usamos o Microsoft Clarity (cookies e métricas de uso). O teste de velocidade contata a Cloudflare.
-       Localização aproximada: <a href="https://db-ip.com" rel="noopener">IP Geolocation by DB-IP</a>.</p>
-    <p>Contato: <a href="mailto:contato@vermeuip.com.br">contato@vermeuip.com.br</a></p>
+<footer class="rodape">
+    <div class="rodape-grade">
+        <div class="rodape-marca">
+            <a class="logo" href="/">ver<span>meu</span>ip</a>
+            <p>Ferramentas de rede em português, rápidas e sem anúncios. Feitas para quem trabalha com TI.</p>
+        </div>
+        <nav aria-label="Ferramentas">
+            <h2>Ferramentas</h2>
+            <ul>
+                <li><a href="#portas" data-aba="portas">Teste de portas</a></li>
+                <li><a href="#dns" data-aba="dns">Consulta DNS</a></li>
+                <li><a href="#whois" data-aba="whois">Whois de domínio</a></li>
+                <li><a href="#vel" data-aba="vel">Teste de velocidade</a></li>
+            </ul>
+        </nav>
+        <div>
+            <h2>Privacidade</h2>
+            <p>Não guardamos o seu IP. Usamos o Microsoft Clarity (cookies e métricas de uso), e o teste de velocidade contata a Cloudflare.</p>
+        </div>
+        <div>
+            <h2>Contato</h2>
+            <p><a href="mailto:contato@vermeuip.com.br">contato@vermeuip.com.br</a></p>
+            <p class="rodape-nota">Localização aproximada por <a href="https://db-ip.com" rel="noopener">IP Geolocation by DB-IP</a>.</p>
+        </div>
+    </div>
+    <div class="rodape-base">
+        <span>© <?= date('Y') ?> vermeuip.com.br. Todos os direitos reservados.</span>
+        <span>Seu IP, DNS, whois, portas e velocidade em um só lugar.</span>
+    </div>
 </footer>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
 
 <script src="assets/app.js" defer></script>
 <script type="module" src="assets/speed.js"></script>
