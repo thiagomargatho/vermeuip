@@ -32,7 +32,8 @@ if ($SemCheck) {
     Remove-Item "$work\public\check.php"
 } else {
     $token = -join ((48..57) + (97..122) | Get-Random -Count 24 | ForEach-Object { [char]$_ })
-    (Get-Content "$work\public\check.php" -Raw).Replace('__TOKEN__', $token) | Set-Content "$work\public\check.php" -Encoding utf8 -NoNewline
+    $src = (Get-Content "$work\public\check.php" -Raw).Replace('__TOKEN__', $token)
+    [IO.File]::WriteAllText("$work\public\check.php", $src, (New-Object Text.UTF8Encoding($false)))  # sem BOM: PHP exige
 }
 
 $zip = Join-Path $root 'dist\vermeuip.zip'
