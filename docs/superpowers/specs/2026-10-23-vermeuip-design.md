@@ -84,9 +84,9 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
 - **Analytics (pedido do dono)**: Microsoft Clarity, projeto `z23oq7eebz`,
   com o snippet oficial abaixo colado no `<head>` de todas as páginas. O dono
   decidiu usá-lo, o que substitui o "sem cookies / sem analytics de terceiros"
-  anterior. Como o Clarity usa cookies e envia dados a terceiros, a página
-  precisa de um aviso de consentimento discreto (carregar o Clarity só após
-  aceitar) e o rodapé deve mencioná-lo. Sem logs próprios de IP.
+  anterior. **O dono decidiu que o Clarity carrega sempre, sem banner de
+  consentimento** (risco LGPD avisado e aceito por ele). O rodapé deve
+  mencionar o uso do Clarity e dos cookies. Sem logs próprios de IP.
 
 ```html
 <script type="text/javascript">
