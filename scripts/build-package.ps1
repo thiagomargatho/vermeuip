@@ -19,8 +19,12 @@ New-Item -ItemType Directory -Force "$work\public" | Out-Null
 robocopy "$root\public" "$work\public" /E /XD vendor /NFL /NDL /NJH /NJS | Out-Null
 Copy-Item "$root\composer.json", "$root\composer.lock" $work
 Push-Location $work
-& $php $composer install --no-dev --optimize-autoloader --no-interaction 2>&1 | Out-Null
+$ErrorActionPreference = 'Continue'
+& $php $composer install --no-dev --optimize-autoloader --no-interaction *> $null
+$exit = $LASTEXITCODE
+$ErrorActionPreference = 'Stop'
 Pop-Location
+if ($exit -ne 0) { throw "composer install falhou (codigo $exit)" }
 Copy-Item "$root\public\vendor\.htaccess" "$work\public\vendor\.htaccess" -Force
 
 $token = $null
