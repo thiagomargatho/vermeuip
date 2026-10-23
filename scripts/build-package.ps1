@@ -28,9 +28,9 @@ if ($exit -ne 0) { throw "composer install falhou (codigo $exit)" }
 Copy-Item "$root\public\vendor\.htaccess" "$work\public\vendor\.htaccess" -Force
 
 $token = $null
-if ($SemCheck) {
-    Remove-Item "$work\public\check.php"
-} else {
+if (-not $SemCheck) {
+    # check.php fica em scripts/ (fora de public/) para o deploy pelo Git nunca publica-lo
+    Copy-Item "$root\scripts\check.php" "$work\public\check.php"
     $token = -join ((48..57) + (97..122) | Get-Random -Count 24 | ForEach-Object { [char]$_ })
     $src = (Get-Content "$work\public\check.php" -Raw).Replace('__TOKEN__', $token)
     [IO.File]::WriteAllText("$work\public\check.php", $src, (New-Object Text.UTF8Encoding($false)))  # sem BOM: PHP exige

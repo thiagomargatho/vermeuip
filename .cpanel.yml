@@ -1,0 +1,7 @@
+---
+deployment:
+  tasks:
+    # Publica public/ em public_html. Nao mexe em vendor/ (dependencias) nem em _data/ (bases DB-IP):
+    # eles nao ficam no git (vendor pelo tamanho/composer, _data por ter mais de 100 MB) e ja estao no servidor.
+    - export DEPLOYPATH=/home/vermeuip/public_html/
+    - /usr/bin/rsync -rlt --exclude=vendor --exclude=_data public/ $DEPLOYPATH
