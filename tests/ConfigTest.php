@@ -8,7 +8,7 @@ final class ConfigTest extends TestCase
 {
     public function test_defaults(): void
     {
-        $config = require __DIR__ . '/../public/_lib/config.php';
+        $config = \Vermeuip\Config::get();
 
         $this->assertSame('cloudflare', $config['SPEED_ENGINE']);
         $this->assertSame([], $config['TRUSTED_PROXIES']);

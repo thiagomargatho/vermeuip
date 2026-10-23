@@ -11,7 +11,7 @@ final class GeoTest extends TestCase
 
     private function realGeo(): Geo
     {
-        $config = require __DIR__ . '/../public/_lib/config.php';
+        $config = \Vermeuip\Config::get();
         if (!is_file($config['GEO_ASN_DB'])) {
             $this->markTestSkipped('base DB-IP ausente (rode scripts/fetch-dbip.ps1)');
         }
