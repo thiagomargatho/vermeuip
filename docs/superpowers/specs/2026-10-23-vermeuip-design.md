@@ -72,8 +72,15 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
 - **DNS**: tipos A, AAAA, MX, TXT, NS, CNAME, SOA para qualquer domínio.
 - **Whois**: via RDAP (rdap.registro.br para `.br`; bootstrap RDAP para os
   demais), exibindo titular quando público, datas, status e servidores DNS.
-- **Velocidade**: medido no navegador (download, upload, latência), contra
-  endpoints de teste públicos; deixar claro que é uma estimativa.
+- **Velocidade (decidido com o dono)**: biblioteca open source
+  `@cloudflare/speedtest` (MIT), medindo no navegador contra a rede da
+  Cloudflare (download, upload, latência, jitter); deixar claro que é uma
+  estimativa.
+- **Velocidade, plano B (dono quer testar também)**: LibreSpeed (open source,
+  backend PHP) hospedado no próprio cPanel. Construir os dois por trás de uma
+  chave simples (ex.: constante de configuração), comparar os resultados no
+  host real e manter o melhor como padrão. O plano B mede até o host, limitado
+  pela banda/CPU dele; documentar essa diferença.
 - **Analytics (pedido do dono)**: Microsoft Clarity, projeto `z23oq7eebz`,
   com o snippet oficial abaixo colado no `<head>` de todas as páginas. O dono
   decidiu usá-lo, o que substitui o "sem cookies / sem analytics de terceiros"
