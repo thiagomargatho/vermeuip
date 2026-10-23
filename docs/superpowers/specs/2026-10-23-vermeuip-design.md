@@ -40,7 +40,8 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
 - Poluição visual ou qualquer anúncio.
 - Ferramenta que sirva para atacar terceiros (varredura de portas de IPs
   alheios).
-- Guardar ou vazar IPs de visitantes.
+- Guardar ou vazar IPs de visitantes (o Clarity, por ser terceiro, deve ser
+  configurado para mascarar conteúdo, incluindo o IP exibido na página).
 - Página lenta: o IP precisa aparecer na primeira renderização.
 
 ## Restrições
@@ -69,8 +70,22 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
   demais), exibindo titular quando público, datas, status e servidores DNS.
 - **Velocidade**: medido no navegador (download, upload, latência), contra
   endpoints de teste públicos; deixar claro que é uma estimativa.
-- **Privacidade**: sem cookies, sem analytics de terceiros, sem logs próprios
-  de IP. Aviso curto no rodapé.
+- **Analytics (pedido do dono)**: Microsoft Clarity, projeto `z23oq7eebz`,
+  com o snippet oficial abaixo colado no `<head>` de todas as páginas. O dono
+  decidiu usá-lo, o que substitui o "sem cookies / sem analytics de terceiros"
+  anterior. Como o Clarity usa cookies e envia dados a terceiros, a página
+  precisa de um aviso de consentimento discreto (carregar o Clarity só após
+  aceitar) e o rodapé deve mencioná-lo. Sem logs próprios de IP.
+
+```html
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "z23oq7eebz");
+</script>
+```
 - **Tema**: segue o sistema (claro/escuro); o padrão e o protótipo são claros.
 
 ## Decisões do Claude após a revisão do construtor (marcadas como escolha minha)
