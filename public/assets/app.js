@@ -78,7 +78,8 @@
       ev.preventDefault();
       var aba = $('#aba-' + link.getAttribute('data-aba'));
       ativarAba(aba);
-      $('.tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var menosMovimento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      $('.tabs').scrollIntoView({ behavior: menosMovimento ? 'auto' : 'smooth', block: 'start' });
       aba.focus({ preventScroll: true });
     });
   });
