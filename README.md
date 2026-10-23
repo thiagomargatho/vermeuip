@@ -23,7 +23,7 @@ Configuração em `public/_lib/settings.php` (`SPEED_ENGINE`, `TRUSTED_PROXIES`,
 3. Abra `https://vermeuip.com.br/check.php?k=<token>` e confira PHP, extensões, saída TCP e HTTPS. **Depois apague `check.php` do servidor.**
 4. DNS no Registro.br: aponte `vermeuip.com.br` e `www` para o IP do host (registro A) ou use os nameservers do host.
 5. cPanel > Contas de e-mail: crie `contato@vermeuip.com.br`.
-6. Teste de velocidade: `SPEED_ENGINE` = `'cloudflare'` (padrão, mede até a Cloudflare) ou `'librespeed'` (plano B, mede até o próprio host). Compare os dois no host real e deixe o melhor.
+6. Teste de velocidade: `SPEED_ENGINE` = `'cloudflare'` (padrão, mede até a Cloudflare) ou `'librespeed'` (plano B, mede até o próprio host). **Medido no host real (23/10/2026): Cloudflare 78 Mbps ↓ / 90 Mbps ↑, 15 ms; LibreSpeed 0,06 Mbps ↓, 223 ms (o host fica na Alemanha e o download falha). Ficou a Cloudflare, e `public_html/speedtest` foi removida do servidor.** O pacote ainda inclui `public/speedtest/` caso se queira repetir o teste em outro host.
 
 ## Notas
 
