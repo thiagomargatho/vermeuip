@@ -54,9 +54,13 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
 
 ## Decisões de "como" — todas escolhas do Claude (o dono delegou; podem ser revistas)
 
-- **Stack**: Next.js (App Router) + TypeScript, hospedado na **Vercel**; rotas
-  de API em funções Node. Domínio e `www` apontados à Vercel via registros
-  DNS no Registro.br.
+- **Hospedagem (decisão do dono)**: servidor próprio com **cPanel**
+  (hospedagem compartilhada), não Vercel. Isso substitui a escolha anterior.
+- **Stack** (minha escolha, por ser o que roda em qualquer cPanel): **PHP 8**
+  para as rotas de API + HTML/CSS/JS puro no navegador, sem build obrigatório
+  no servidor. O IP vem renderizado em PHP na primeira resposta. O domínio
+  `vermeuip.com.br` e `www` apontam ao host via DNS no Registro.br (ou pelos
+  nameservers do host).
 - **IP**: lido no servidor pelos cabeçalhos da requisição; nunca por serviço
   externo chamado do navegador.
 - **Localização/provedor**: consulta feita no servidor a uma base ou serviço
@@ -90,9 +94,9 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
 
 ## Decisões do Claude após a revisão do construtor (marcadas como escolha minha)
 
-- **Teste de portas na Vercel**: aceitar o limite. Em CGNAT/firewall o resultado
-  será "fechada ou filtrada", com aviso claro na tela; sem servidor extra (VPS)
-  na v1. Se isso incomodar no uso real, a v2 troca por uma VPS pequena.
+- **Teste de portas**: aceitar o limite. Em CGNAT/firewall o resultado
+  será "fechada ou filtrada", com aviso claro na tela; sem servidor extra
+  (VPS) na v1.
 - **SSRF/abuso**: bloquear IPs privados, reservados e loopback em qualquer
   entrada (DNS, whois, portas). Teste de portas continua só no IP do visitante.
 - **Limite de taxa**: contador efêmero por IP com validade de minutos, melhor
@@ -109,11 +113,17 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
 - **Rodapé**: texto curto de privacidade, atribuição da base de IP e contato
   `contato@vermeuip.com.br` (informado pelo dono; a caixa de e-mail ainda
   precisa existir); sem página de política separada na v1.
-- **Deploy**: o Claude entrega o código e faz o deploy usando o login do dono;
-  o dono faz login na Vercel e altera o DNS no Registro.br.
+- **Deploy**: o Claude entrega o código pronto para subir no cPanel (pasta
+  `public_html`, via Gerenciador de Arquivos, FTP ou Git do cPanel). O dono
+  faz os logins no cPanel e no Registro.br e cria a caixa
+  `contato@vermeuip.com.br`.
+- **Verificar no host real (incógnitas)**: versão do PHP, se a hospedagem
+  permite conexões de saída (`fsockopen`) para o teste de portas, e limites de
+  banda/tempo para o teste de velocidade. O teste de portas deve falhar com
+  mensagem clara se o host bloquear conexões de saída.
 
 ## Deixado ao construtor
 
 Escolha da base/serviço de geolocalização, limites exatos de taxa, estrutura de
 pastas, testes, textos de erro, SEO básico (título, descrição), favicon, e como
-medir a velocidade dentro dos limites da Vercel.
+medir a velocidade dentro dos limites da hospedagem compartilhada.
