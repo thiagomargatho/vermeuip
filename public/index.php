@@ -25,9 +25,41 @@ function e(string $s): string
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ver meu IP — vermeuip.com.br</title>
-<meta name="description" content="Veja seu IP, provedor e localização aproximada, e use teste de portas, consulta DNS, whois e teste de velocidade. Em português, sem anúncios.">
+<title>Qual é o meu IP? Teste de portas, DNS, Whois e velocidade</title>
+<meta name="description" content="Veja qual é o seu IP, provedor e localização. Ferramentas grátis de TI: teste de portas, consulta DNS, whois e velocidade. Em português, sem anúncios.">
+<link rel="canonical" href="https://vermeuip.com.br/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="vermeuip.com.br">
+<meta property="og:url" content="https://vermeuip.com.br/">
+<meta property="og:title" content="Qual é o meu IP? Teste de portas, DNS, Whois e velocidade">
+<meta property="og:description" content="Seu IP, provedor e localização aproximada, mais teste de portas, consulta DNS, whois e teste de velocidade. Em português e sem anúncios.">
+<meta property="og:image" content="https://vermeuip.com.br/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="vermeuip.com.br: qual é o meu IP e ferramentas de rede">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Qual é o meu IP? Teste de portas, DNS, Whois e velocidade">
+<meta name="twitter:description" content="Seu IP, provedor e localização aproximada, mais teste de portas, consulta DNS, whois e teste de velocidade.">
+<meta name="twitter:image" content="https://vermeuip.com.br/assets/og.png">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "vermeuip.com.br",
+  "url": "https://vermeuip.com.br/",
+  "description": "Descubra qual é o seu IP, provedor e localização aproximada. Teste de portas, consulta DNS, whois e teste de velocidade.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Qualquer",
+  "inLanguage": "pt-BR",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+  "featureList": ["Qual é o meu IP", "Teste de portas", "Consulta DNS", "Whois de domínio", "Teste de velocidade"]
+}
+</script>
 <meta name="color-scheme" content="light dark">
 <script>
     // aplica o tema salvo antes de pintar a pagina (evita piscar claro->escuro)
@@ -52,7 +84,7 @@ function e(string $s): string
 
 <main>
 <section class="hero" aria-labelledby="ip-label">
-    <p class="muted" id="ip-label">Seu endereço <?= $ipv6 ? 'IPv6' : 'IPv4' ?></p>
+    <h1 class="rotulo" id="ip-label">Qual é o meu IP? <span>Seu endereço <?= $ipv6 ? 'IPv6' : 'IPv4' ?></span></h1>
     <div class="ip" id="ip" data-clarity-mask="true"><?= $ip !== '' ? e($ip) : '—' ?></div>
     <p class="muted" id="local" data-clarity-mask="true">Carregando localização…</p>
     <p class="muted small" id="ptr-linha" data-clarity-mask="true" hidden>IP reverso: <span id="ptr"></span></p>
