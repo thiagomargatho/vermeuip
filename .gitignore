@@ -2,3 +2,8 @@
 node_modules/
 .next/
 .vercel/
+public/_data/*.mmdb
+dist/
+.phpunit.result.cache
+public/vendor/*
+!public/vendor/.htaccess

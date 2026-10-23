@@ -1,0 +1,6 @@
+DirectoryIndex index.php
+Options -Indexes
+
+<FilesMatch "\.(mmdb|lock|json)$">
+    Require all denied
+</FilesMatch>
