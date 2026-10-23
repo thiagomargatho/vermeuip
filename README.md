@@ -16,7 +16,19 @@ php -S localhost:8080 -t public                      # servidor local
 
 Configuração em `public/_lib/settings.php` (`SPEED_ENGINE`, `TRUSTED_PROXIES`, `RATE_LIMIT_PER_MIN`).
 
-## Deploy no cPanel
+## Deploy automático pelo GitHub (padrão)
+
+Enviar para a `main` publica o site em até 5 minutos:
+
+```bash
+git push origin main
+```
+
+Como funciona: o repositório (público) está clonado em `/home/vermeuip/repositories/vermeuip` (Git Version Control do cPanel) e um cron `*/5 * * * *` roda `git pull --ff-only origin main` e `rsync` de `public/` para `public_html/`, **sem** `vendor/`, `_data/` e `speedtest/` (o mesmo vale para o `.cpanel.yml`). A saída da última execução fica em `/home/vermeuip/deploy.log`; se o site não atualizar, é lá que está o motivo.
+
+Limites: `vendor/` (dependências) e `_data/*.mmdb` (bases DB-IP, mais de 100 MB) **não** estão no git. Mudança neles, ou em `composer.json`, ainda precisa do zip (abaixo). O botão "Update from Remote" do cPanel não funciona neste host (sem shell); use o cron.
+
+## Deploy manual no cPanel (zip)
 
 1. `.\scripts\build-package.ps1` gera `dist/vermeuip.zip` (só dependências de produção, bases DB-IP incluídas) e imprime o token do `check.php`.
 2. No cPanel > Gerenciador de Arquivos: abra `public_html` (ou a pasta do domínio), envie o zip e extraia ali.
