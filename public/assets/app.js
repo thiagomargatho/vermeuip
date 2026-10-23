@@ -69,6 +69,32 @@
     });
   });
 
+  /* ---- tema claro/escuro: comeca no do sistema; o clique grava a escolha ---- */
+  var raiz = document.documentElement;
+  var botaoTema = $('#tema');
+  var escuroSistema = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+  function temaAtual() {
+    var t = raiz.getAttribute('data-theme');
+    if (t === 'light' || t === 'dark') return t;
+    return escuroSistema && escuroSistema.matches ? 'dark' : 'light';
+  }
+  function mostrarTema() {
+    var escuro = temaAtual() === 'dark';
+    // o botao mostra o tema para o qual ele vai trocar
+    $('#tema-icone').textContent = escuro ? '☀' : '☾';
+    $('#tema-texto').textContent = escuro ? 'Tema claro' : 'Tema escuro';
+    botaoTema.setAttribute('aria-pressed', escuro ? 'true' : 'false');
+  }
+  botaoTema.addEventListener('click', function () {
+    var novo = temaAtual() === 'dark' ? 'light' : 'dark';
+    raiz.setAttribute('data-theme', novo);
+    try { localStorage.setItem('tema', novo); } catch (e) {}
+    mostrarTema();
+  });
+  if (escuroSistema && escuroSistema.addEventListener) escuroSistema.addEventListener('change', mostrarTema);
+  mostrarTema();
+
   /* ---- copiar IP ---- */
   var copiar = $('#copiar');
   copiar.addEventListener('click', function () {
@@ -84,11 +110,6 @@
     var texto = [partes, prov].filter(Boolean).join(' · ');
     $('#local').textContent = texto ? texto + ' · aproximado' : 'Localização indisponível';
     if (g.ptr) { $('#ptr').textContent = g.ptr; $('#ptr-linha').hidden = false; }
-    if (g.lat != null && g.lon != null) {
-      var m = $('#mapa');
-      m.href = 'https://www.openstreetmap.org/?mlat=' + g.lat + '&mlon=' + g.lon + '#map=10/' + g.lat + '/' + g.lon;
-      m.hidden = false;
-    }
   }).catch(function () { $('#local').textContent = 'Localização indisponível'; });
 
   /* ---- teste de portas ---- */

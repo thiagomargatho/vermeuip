@@ -17,10 +17,9 @@ Página única, layout **A** (protótipo aprovado: `.superpowers/brainstorm/2545
 
 1. **Topo**: IP do visitante grande, localização aproximada (cidade/UF/país),
    provedor (ISP + ASN), IP reverso (DNS PTR, ex.: ip-177-76-43-250.user.vivozap.com.br),
-   botão "Copiar IP", e link discreto "Ver no mapa" ao lado da localização
-   (abre o OpenStreetMap nas coordenadas; sem mapa embutido, por peso e
-   privacidade). Mostrar IPv6 quando houver. (PTR adicionado após
-   ver o meuip.com.br, que o exibe.)
+   botão "Copiar IP". Sem mapa nem link de mapa (o dono pediu para remover o
+   "Ver no mapa"). Mostrar IPv6 quando houver. (PTR adicionado após ver o
+   meuip.com.br, que o exibe.) Botão de tema claro/escuro no cabeçalho.
 2. **Abas** abaixo do topo, sem recarregar a página:
    - Teste de portas
    - Consulta DNS
@@ -97,7 +96,9 @@ Contas/login, histórico, anúncios, rastreadores, API pública, outros idiomas
     })(window, document, "clarity", "script", "z23oq7eebz");
 </script>
 ```
-- **Tema**: segue o sistema (claro/escuro); o padrão e o protótipo são claros.
+- **Tema (pedido do dono)**: duas versões, clara e escura, e o visitante escolhe
+  num botão no cabeçalho. Começa no tema do sistema; a escolha fica salva no
+  navegador (`localStorage`, chave `tema`) e é aplicada antes de pintar a página.
 
 ## Decisões do Claude após a revisão do construtor (marcadas como escolha minha)
 

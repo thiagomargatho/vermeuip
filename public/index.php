@@ -28,6 +28,11 @@ function e(string $s): string
 <title>Ver meu IP — vermeuip.com.br</title>
 <meta name="description" content="Veja seu IP, provedor e localização aproximada, e use teste de portas, consulta DNS, whois e teste de velocidade. Em português, sem anúncios.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="color-scheme" content="light dark">
+<script>
+    // aplica o tema salvo antes de pintar a pagina (evita piscar claro->escuro)
+    try { var t = localStorage.getItem('tema'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
 <link rel="stylesheet" href="assets/app.css">
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -40,6 +45,9 @@ function e(string $s): string
 <body>
 <header class="top">
     <a class="logo" href="/">ver<span>meu</span>ip</a>
+    <button class="tema" id="tema" type="button" aria-label="Alternar entre tema claro e escuro">
+        <span id="tema-icone" aria-hidden="true">☾</span> <span id="tema-texto">Tema escuro</span>
+    </button>
 </header>
 
 <main>
@@ -50,7 +58,6 @@ function e(string $s): string
     <p class="muted small" id="ptr-linha" data-clarity-mask="true" hidden>IP reverso: <span id="ptr"></span></p>
     <div class="actions">
         <button class="btn" id="copiar" type="button">Copiar IP</button>
-        <a class="link" id="mapa" href="#" target="_blank" rel="noopener" hidden>Ver no mapa</a>
     </div>
 </section>
 
