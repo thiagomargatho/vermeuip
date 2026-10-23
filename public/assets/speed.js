@@ -5,9 +5,33 @@ import CloudflareSpeedTest from './vendor/cloudflare-speedtest.js';
  * Dois motores atras da mesma interface; o escolhido vem de data-engine no painel.
  */
 
+// Medicoes padrao da Cloudflare sem "packetLoss": ele depende do servico TURN, que falha
+// ("unable to get turn server credentials") e derrubava o teste no fim. Maior transferencia: 25 MB.
+var MEDICOES = [
+  { type: 'latency', numPackets: 2 },
+  { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },
+  { type: 'latency', numPackets: 20 },
+  { type: 'download', bytes: 1e5, count: 9 },
+  { type: 'latency', numPackets: 2 },
+  { type: 'download', bytes: 1e6, count: 8 },
+  { type: 'latency', numPackets: 2 },
+  { type: 'upload', bytes: 1e5, count: 8 },
+  { type: 'latency', numPackets: 2 },
+  { type: 'upload', bytes: 1e6, count: 6 },
+  { type: 'latency', numPackets: 2 },
+  { type: 'download', bytes: 1e7, count: 6 },
+  { type: 'latency', numPackets: 2 },
+  { type: 'upload', bytes: 1e7, count: 4 },
+  { type: 'latency', numPackets: 2 },
+  { type: 'download', bytes: 25e6, count: 4 },
+  { type: 'latency', numPackets: 2 },
+  { type: 'upload', bytes: 25e6, count: 4 },
+  { type: 'latency', numPackets: 2 }
+];
+
 function runCloudflare(onProgress) {
   return new Promise(function (resolve, reject) {
-    var engine = new CloudflareSpeedTest({ autoStart: false });
+    var engine = new CloudflareSpeedTest({ autoStart: false, measurements: MEDICOES });
     var snapshot = function (r) {
       var dl = r.getDownloadBandwidth(), ul = r.getUploadBandwidth();
       return {
