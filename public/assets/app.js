@@ -31,12 +31,24 @@
     var r, corpo;
     try {
       r = await fetch(url, opcoes);
-      corpo = await r.json();
     } catch (e) {
       throw new Error('Não foi possível completar a consulta. Tente novamente.');
     }
-    if (!r.ok) throw new Error(corpo && corpo.erro ? corpo.erro : 'Erro na consulta.');
+    try { corpo = await r.json(); } catch (e) { corpo = null; }
+    if (!r.ok) {
+      if (corpo && corpo.erro) throw new Error(corpo.erro);
+      // o firewall do servidor responde 403 em HTML a entradas com cara de URL
+      throw new Error(r.status === 403
+        ? 'A consulta foi bloqueada. Digite só o domínio, por exemplo exemplo.com.br.'
+        : 'Erro na consulta. Tente novamente.');
+    }
+    if (!corpo) throw new Error('Resposta inesperada do servidor. Tente novamente.');
     return corpo;
+  }
+
+  /* "https://Exemplo.com/caminho?x" -> "Exemplo.com": evita enviar "://" ao servidor */
+  function limparDominio(v) {
+    return String(v).trim().replace(/^[a-z][a-z0-9+.\-]*:\/\//i, '').split(/[\/?#]/)[0];
   }
 
   async function executar(botao, painel, fn) {
@@ -102,7 +114,7 @@
   formDns.addEventListener('submit', function (ev) {
     ev.preventDefault();
     executar($('button[type=submit]', formDns), outDns, async function () {
-      var q = new URLSearchParams({ dominio: formDns.dominio.value, tipo: formDns.tipo.value });
+      var q = new URLSearchParams({ dominio: limparDominio(formDns.dominio.value), tipo: formDns.tipo.value });
       var d = await chamar('api/dns.php?' + q);
       if (!d.registros.length) return mostrarErro(outDns, 'Nenhum registro encontrado.');
       outDns.replaceChildren(tabela(['Tipo', 'Valor', 'TTL'], d.registros.map(function (r) { return [r.tipo, r.valor, r.ttl]; })));
@@ -114,7 +126,7 @@
   formWhois.addEventListener('submit', function (ev) {
     ev.preventDefault();
     executar($('button[type=submit]', formWhois), outWhois, async function () {
-      var d = await chamar('api/whois.php?' + new URLSearchParams({ dominio: formWhois.dominio.value }));
+      var d = await chamar('api/whois.php?' + new URLSearchParams({ dominio: limparDominio(formWhois.dominio.value) }));
       outWhois.replaceChildren(tabela(['Campo', 'Valor'], [
         ['Domínio', d.dominio], ['Titular', d.titular], ['Registrado em', d.registrado_em],
         ['Expira em', d.expira_em], ['Status', (d.status || []).join(', ')],

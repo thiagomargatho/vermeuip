@@ -17,9 +17,14 @@ function runCloudflare(onProgress) {
         jitter_ms: r.getUnloadedJitter() != null ? r.getUnloadedJitter() : null
       };
     };
-    engine.onResultsChange = function () { onProgress(snapshot(engine.results)); };
+    var last = null;
+    engine.onResultsChange = function () { last = snapshot(engine.results); onProgress(last); };
     engine.onFinish = function (results) { resolve(snapshot(results)); };
-    engine.onError = function () { reject(new Error('O teste de velocidade falhou. Tente novamente.')); };
+    engine.onError = function () {
+      // um erro no fim da medicao nao deve jogar fora download/upload ja medidos
+      if (last && (last.download_mbps || last.upload_mbps)) resolve(last);
+      else reject(new Error('O teste de velocidade falhou. Tente novamente.'));
+    };
     engine.play();
   });
 }
