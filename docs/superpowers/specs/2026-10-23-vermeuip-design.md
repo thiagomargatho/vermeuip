@@ -16,7 +16,9 @@ das ferramentas em poucos cliques, sem anúncio, cadastro ou distração.
 Página única, layout **A** (protótipo aprovado: `.superpowers/brainstorm/2545-1792738510/content/prototipos.html`, aba "A · Abas").
 
 1. **Topo**: IP do visitante grande, localização aproximada (cidade/UF/país),
-   provedor (ISP + ASN), botão "Copiar IP". Mostrar IPv6 quando houver.
+   provedor (ISP + ASN), IP reverso (DNS PTR, ex.: ip-177-76-43-250.user.vivozap.com.br),
+   botão "Copiar IP". Mostrar IPv6 quando houver. (PTR adicionado após
+   ver o meuip.com.br, que o exibe.)
 2. **Abas** abaixo do topo, sem recarregar a página:
    - Teste de portas
    - Consulta DNS
