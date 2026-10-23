@@ -23,7 +23,7 @@ final class WhoisEndpoint
         }
 
         try {
-            return [200, Rdap::lookup($domain, $http ?? [Rdap::class, 'curlGet'])];
+            return [200, Rdap::lookup($domain, $http ?? [Rdap::class, 'httpGet'])];
         } catch (DomainNotFound) {
             return [404, ['erro' => 'Domínio não encontrado.']];
         } catch (\RuntimeException) {

@@ -27,6 +27,9 @@ Configuração em `public/_lib/settings.php` (`SPEED_ENGINE`, `TRUSTED_PROXIES`,
 
 ## Notas
 
+- O código não exige as extensões `curl`, `intl`, `mbstring` nem `sockets` (o cPanel do dono não as tem): IDN, mbstring e normalizer vêm de polyfills em `vendor/`, e o whois usa streams (`allow_url_fopen` + `openssl`). `tests/HostCompatTest.php` roda o código com `php -n` para garantir isso.
+- `dist/vermeuip-patch.zip` é uma atualização pequena (código, `vendor/`, `check.php`), sem as bases DB-IP: serve para reenviar só o que mudou.
+
 - O teste de portas só testa o IP do próprio visitante. Atrás de CGNAT/firewall o resultado é "fechada ou filtrada". Se o host bloquear conexões de saída, a aba mostra erro claro.
 - Atribuição obrigatória (CC BY 4.0): "IP Geolocation by DB-IP", já no rodapé. Atualize as bases uma vez por mês com `fetch-dbip.ps1`.
 - `public/speedtest/` é o LibreSpeed (LGPL); `speedtest.js` tem um ajuste: caminho do worker `speedtest/speedtest_worker.js`.

@@ -55,8 +55,23 @@ $smokeExit = $LASTEXITCODE
 $ErrorActionPreference = 'Stop'
 if ($smokeExit -ne 0) { throw "Verificacao do pacote falhou (codigo $smokeExit): autoload ou arquivos ausentes" }
 
-$zip = Join-Path $root 'dist\vermeuip.zip'
-if (Test-Path $zip) { Remove-Item $zip }
-Compress-Archive -Path "$work\public\*" -DestinationPath $zip -CompressionLevel Optimal
-Write-Host ("Pacote: {0} ({1:N1} MB)" -f $zip, ((Get-Item $zip).Length / 1MB))
+# Zip com barras normais (Compress-Archive do PS 5.1 grava barras invertidas e o unzip do Linux reclama)
+Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
+function New-Zip([string]$Dest, [string]$Base, [string[]]$Files) {
+    if (Test-Path $Dest) { Remove-Item $Dest }
+    $za = [IO.Compression.ZipFile]::Open($Dest, 'Create')
+    foreach ($f in $Files) {
+        $rel = $f.Substring($Base.Length).TrimStart('\', '/').Replace('\', '/')
+        [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($za, $f, $rel, 'Optimal')
+    }
+    $za.Dispose()
+    Write-Host ("Pacote: {0} ({1:N1} MB)" -f $Dest, ((Get-Item $Dest).Length / 1MB))
+}
+$pub = "$work\public"
+$all = Get-ChildItem $pub -Recurse -File -Force | Select-Object -ExpandProperty FullName
+New-Zip (Join-Path $root 'dist\vermeuip.zip') $pub $all
+
+# Patch (atualizacao): so codigo, vendor/ e check.php, sem as bases DB-IP nem assets pesados.
+$patch = $all | Where-Object { $_ -notmatch '\\_data\\' -and $_ -notmatch '\\assets\\vendor\\' -and $_ -notmatch '\\speedtest\\' }
+New-Zip (Join-Path $root 'dist\vermeuip-patch.zip') $pub $patch
 if ($token) { Write-Host "check.php token: $token" }

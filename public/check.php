@@ -18,8 +18,9 @@ function linha(string $nome, string $valor): void
 }
 
 linha('PHP', PHP_VERSION . ' (' . PHP_SAPI . ')');
-foreach (['curl', 'intl', 'mbstring', 'openssl', 'sockets', 'fileinfo'] as $ext) {
-    linha("ext-$ext", extension_loaded($ext) ? 'ok' : 'FALTANDO');
+linha('ext-openssl (obrigatoria p/ whois)', extension_loaded('openssl') ? 'ok' : 'FALTANDO');
+foreach (['curl', 'intl', 'mbstring', 'sockets', 'fileinfo'] as $ext) {
+    linha("ext-$ext (opcional)", extension_loaded($ext) ? 'ok' : 'ausente (ok, ha alternativa)');
 }
 linha('allow_url_fopen', ini_get('allow_url_fopen') ? 'on' : 'off');
 linha('memory_limit', (string) ini_get('memory_limit'));
@@ -55,11 +56,12 @@ if ($s) {
     fclose($s);
 }
 
-$ch = curl_init('https://rdap.registro.br/domain/registro.br');
-curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 8]);
-curl_exec($ch);
-linha('HTTPS de saida (rdap.registro.br)', curl_errno($ch) === 0 ? 'ok HTTP ' . curl_getinfo($ch, CURLINFO_RESPONSE_CODE) : 'FALHA: ' . curl_error($ch));
-curl_close($ch);
+try {
+    $rdap = Vermeuip\Rdap::httpGet('https://rdap.registro.br/domain/registro.br');
+    linha('RDAP (rdap.registro.br)', is_array($rdap) ? 'ok (' . ($rdap['ldhName'] ?? '?') . ')' : 'sem resposta');
+} catch (Throwable $e) {
+    linha('RDAP (rdap.registro.br)', 'FALHA: ' . $e->getMessage());
+}
 
 linha('DNS (dns_get_record google.com)', @dns_get_record('google.com', DNS_A) ? 'ok' : 'FALHA');
 linha('REMOTE_ADDR', (string) ($_SERVER['REMOTE_ADDR'] ?? ''));

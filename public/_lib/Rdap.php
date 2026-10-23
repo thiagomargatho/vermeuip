@@ -38,36 +38,51 @@ final class Rdap
         ];
     }
 
-    /** GET com curl: timeout curto, so https, ate 3 redirecionamentos. null = 404. */
-    public static function curlGet(string $url): ?array
+    /**
+     * GET por streams (sem depender da extensao curl): timeout curto, so https,
+     * ate 3 redirecionamentos. null = 404.
+     */
+    public static function httpGet(string $url): ?array
     {
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 8,
-            CURLOPT_CONNECTTIMEOUT => 4,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 3,
-            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
-            CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
-            CURLOPT_HTTPHEADER => ['Accept: application/rdap+json, application/json'],
-        ]);
-        $body = curl_exec($ch);
-        $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        $err = curl_error($ch);
-        curl_close($ch);
+        if (!str_starts_with($url, 'https://')) {
+            throw new \RuntimeException('Somente https');
+        }
 
-        if ($body === false) {
-            throw new \RuntimeException($err);
+        $context = stream_context_create(['http' => [
+            'method' => 'GET',
+            'timeout' => 8,
+            'follow_location' => 1,
+            'max_redirects' => 3,
+            'ignore_errors' => true,
+            'header' => "Accept: application/rdap+json, application/json\r\nUser-Agent: vermeuip.com.br\r\n",
+        ]]);
+
+        $body = @file_get_contents($url, false, $context);
+        $code = self::statusFromHeaders($http_response_header ?? []);
+
+        if ($body === false || $code === 0) {
+            throw new \RuntimeException('Falha de rede');
         }
         if ($code === 404) {
             return null;
         }
-        $data = json_decode((string) $body, true);
+        $data = json_decode($body, true);
         if ($code >= 400 || !is_array($data)) {
             throw new \RuntimeException('RDAP HTTP ' . $code);
         }
         return $data;
+    }
+
+    /** Codigo da ultima linha de status ("HTTP/1.1 200 OK") nos cabecalhos, 0 se nao houver. */
+    public static function statusFromHeaders(array $headers): int
+    {
+        $code = 0;
+        foreach ($headers as $line) {
+            if (preg_match('#^HTTP/\S+\s+(\d{3})#', (string) $line, $m)) {
+                $code = (int) $m[1];
+            }
+        }
+        return $code;
     }
 
     /** @param array<string,mixed> $data */
