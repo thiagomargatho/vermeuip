@@ -1,6 +1,12 @@
 DirectoryIndex index.php
 Options -Indexes
 
+# HTTP -> HTTPS (exceto o desafio .well-known da renovacao automatica do certificado)
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 <FilesMatch "\.(mmdb|lock|json)$">
     Require all denied
 </FilesMatch>
