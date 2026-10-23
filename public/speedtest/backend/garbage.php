@@ -18,8 +18,9 @@ function getChunkCount()
         return 4;
     }
 
-    if ((int) $_GET['ckSize'] > 1024) {
-        return 1024;
+    // vermeuip: teto de 100 MB por requisicao (o original aceita 1024) para limitar abuso de banda
+    if ((int) $_GET['ckSize'] > 100) {
+        return 100;
     }
 
     return (int) $_GET['ckSize'];

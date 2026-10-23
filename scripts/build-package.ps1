@@ -16,7 +16,7 @@ if (Test-Path $work) { Remove-Item $work -Recurse -Force }
 New-Item -ItemType Directory -Force "$work\public" | Out-Null
 
 # copia public/ sem vendor, e instala so as dependencias de producao
-robocopy "$root\public" "$work\public" /E /XD vendor /NFL /NDL /NJH /NJS | Out-Null
+robocopy "$root\public" "$work\public" /E /XD "$root\public\vendor" /NFL /NDL /NJH /NJS | Out-Null
 Copy-Item "$root\composer.json", "$root\composer.lock" $work
 Push-Location $work
 $ErrorActionPreference = 'Continue'
@@ -35,6 +35,25 @@ if ($SemCheck) {
     $src = (Get-Content "$work\public\check.php" -Raw).Replace('__TOKEN__', $token)
     [IO.File]::WriteAllText("$work\public\check.php", $src, (New-Object Text.UTF8Encoding($false)))  # sem BOM: PHP exige
 }
+
+# Verificacao do pacote como ele fica no servidor (sem a pasta "public/" acima do vendor):
+# as classes Vermeuip\ carregam e os arquivos que o navegador pede existem.
+$smoke = Join-Path $root 'dist\smoke.php'
+Set-Content $smoke -Encoding ascii -Value @'
+<?php
+$dir = $argv[1];
+require $dir . '/bootstrap.php';
+$ok = class_exists('Vermeuip\Config')
+    && class_exists('Vermeuip\GeoEndpoint')
+    && is_file($dir . '/assets/vendor/cloudflare-speedtest.js')
+    && is_file($dir . '/speedtest/speedtest_worker.js');
+exit($ok ? 0 : 1);
+'@
+$ErrorActionPreference = 'Continue'
+& $php $smoke "$work\public" *> $null
+$smokeExit = $LASTEXITCODE
+$ErrorActionPreference = 'Stop'
+if ($smokeExit -ne 0) { throw "Verificacao do pacote falhou (codigo $smokeExit): autoload ou arquivos ausentes" }
 
 $zip = Join-Path $root 'dist\vermeuip.zip'
 if (Test-Path $zip) { Remove-Item $zip }

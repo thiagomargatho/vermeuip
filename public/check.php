@@ -39,6 +39,12 @@ foreach (['dbip-city-lite.mmdb', 'dbip-asn-lite.mmdb'] as $db) {
     linha($db, is_file($path) ? round(filesize($path) / 1048576, 1) . ' MB' : 'AUSENTE');
 }
 linha('vendor/autoload.php', is_file(__DIR__ . '/vendor/autoload.php') ? 'ok' : 'AUSENTE');
+try {
+    require __DIR__ . '/bootstrap.php';
+    linha('autoload Vermeuip\\Config', class_exists('Vermeuip\\Config') ? 'ok' : 'FALHA');
+} catch (Throwable $e) {
+    linha('autoload Vermeuip\\Config', 'FALHA: ' . $e->getMessage());
+}
 
 $errno = 0;
 $errstr = '';
