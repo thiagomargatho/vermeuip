@@ -40,6 +40,16 @@ final class GeoTest extends TestCase
         $this->assertNull(Geo::ufFromName('Texas'));
     }
 
+    public function test_json_keeps_short_coordinates_even_with_host_serialize_precision_17(): void
+    {
+        $previous = ini_set('serialize_precision', '17'); // valor do php.ini do cPanel do dono
+        try {
+            $this->assertSame('{"lat":-21.3594,"lon":-48.0656}', \Vermeuip\Json::encode(['lat' => -21.3594, 'lon' => -48.0656]));
+        } finally {
+            ini_set('serialize_precision', (string) $previous);
+        }
+    }
+
     public function test_asn_and_isp_for_known_ip(): void
     {
         $result = $this->realGeo()->lookup('8.8.8.8');

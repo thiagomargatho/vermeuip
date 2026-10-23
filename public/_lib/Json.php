@@ -9,7 +9,14 @@ final class Json
     /** @param array<mixed> $body */
     public static function encode(array $body): string
     {
-        return json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        // Alguns php.ini (ex.: o do cPanel do dono) usam serialize_precision=17, que imprime
+        // -21.3594 como -21.359400000000001. -1 usa a representacao mais curta que volta ao mesmo float.
+        $previous = ini_set('serialize_precision', '-1');
+        try {
+            return json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        } finally {
+            ini_set('serialize_precision', (string) $previous);
+        }
     }
 
     /** @param array<mixed> $body */

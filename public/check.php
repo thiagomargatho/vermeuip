@@ -47,6 +47,16 @@ try {
     linha('autoload Vermeuip\\Config', 'FALHA: ' . $e->getMessage());
 }
 
+foreach (['dbip-asn-lite.mmdb', 'dbip-city-lite.mmdb'] as $db) {
+    try {
+        $reader = new MaxMind\Db\Reader(__DIR__ . '/_data/' . $db);
+        $rec = $reader->get('177.76.43.250');
+        linha("leitura $db", $rec ? 'ok: ' . json_encode($rec['autonomous_system_organization'] ?? $rec['city']['names']['en'] ?? '?', JSON_UNESCAPED_UNICODE) : 'sem registro');
+    } catch (Throwable $e) {
+        linha("leitura $db", 'FALHA: ' . get_class($e) . ': ' . $e->getMessage());
+    }
+}
+
 $errno = 0;
 $errstr = '';
 $t = microtime(true);
