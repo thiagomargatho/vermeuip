@@ -120,6 +120,6 @@ function e(string $s): string
 </footer>
 
 <script src="assets/app.js" defer></script>
-<script src="assets/speed.js" defer></script>
+<script type="module" src="assets/speed.js"></script>
 </body>
 </html>

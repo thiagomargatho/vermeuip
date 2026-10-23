@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-$engine = 'cloudflare'; // 'cloudflare' | 'librespeed'
-
 return [
-    'SPEED_ENGINE' => in_array($engine, ['cloudflare', 'librespeed'], true) ? $engine : 'cloudflare',
+    // Motor do teste de velocidade: 'cloudflare' (padrao) ou 'librespeed' (plano B, mede ate este host).
+    'SPEED_ENGINE' => 'cloudflare',
     // IPs de proxies confiaveis (ex.: Cloudflare/nginx na frente). Vazio = usar so REMOTE_ADDR.
     'TRUSTED_PROXIES' => [],
     'RATE_LIMIT_PER_MIN' => 20,
