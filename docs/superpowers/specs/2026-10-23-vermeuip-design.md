@@ -17,7 +17,9 @@ Página única, layout **A** (protótipo aprovado: `.superpowers/brainstorm/2545
 
 1. **Topo**: IP do visitante grande, localização aproximada (cidade/UF/país),
    provedor (ISP + ASN), IP reverso (DNS PTR, ex.: ip-177-76-43-250.user.vivozap.com.br),
-   botão "Copiar IP". Mostrar IPv6 quando houver. (PTR adicionado após
+   botão "Copiar IP", e link discreto "Ver no mapa" ao lado da localização
+   (abre o OpenStreetMap nas coordenadas; sem mapa embutido, por peso e
+   privacidade). Mostrar IPv6 quando houver. (PTR adicionado após
    ver o meuip.com.br, que o exibe.)
 2. **Abas** abaixo do topo, sem recarregar a página:
    - Teste de portas
