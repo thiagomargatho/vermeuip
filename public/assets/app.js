@@ -17,13 +17,16 @@
     painel.replaceChildren(el('div', { 'class': 'erro', role: 'alert', text: msg }));
   }
 
-  function tabela(cabecalho, linhas) {
+  // naoCopiar: indices de coluna que sao so rotulos (ex.: nomes dos campos no whois)
+  function tabela(cabecalho, linhas, naoCopiar) {
+    naoCopiar = naoCopiar || [];
     var thead = el('thead', {}, [el('tr', {}, cabecalho.map(function (h) { return el('th', { text: h }); }))]);
     var tbody = el('tbody', {}, linhas.map(function (l) {
-      return el('tr', {}, l.map(function (c) {
+      return el('tr', {}, l.map(function (c, i) {
         if (c instanceof Node) return el('td', {}, [c]);
         var vazio = c == null || c === '';
-        return el('td', vazio ? { text: '—' } : { text: String(c), 'class': 'copiavel', tabindex: '0', title: 'Clique para copiar' });
+        if (vazio || naoCopiar.indexOf(i) !== -1) return el('td', { text: vazio ? '—' : String(c) });
+        return el('td', { text: String(c), 'class': 'copiavel', tabindex: '0', title: 'Clique para copiar' });
       }));
     }));
     return el('table', {}, [thead, tbody]);
@@ -195,7 +198,7 @@
         ['Domínio', d.dominio], ['Titular', d.titular], ['Registrado em', d.registrado_em],
         ['Expira em', d.expira_em], ['Status', (d.status || []).join(', ')],
         ['Servidores DNS', (d.nameservers || []).join(', ')]
-      ]));
+      ], [0]));
     });
   });
 
