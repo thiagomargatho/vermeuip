@@ -23,7 +23,7 @@
   /* tipografia */
   --fs-xs:12px;--fs-sm:13px;--fs-md:14px;--fs-lg:16px;--fs-xl:18px;--fs-display:36px;
   /* raio, sombra, movimento */
-  --r-md:8px;--r-pill:99px;
+  --r-md:8px;--r-lg:12px;--r-pill:99px;
   --sh-toast:0 6px 24px rgb(0 0 0 / .25);
   --t-fast:.15s;
 }
@@ -62,12 +62,23 @@ a{color:var(--ac)}
 .tema{display:inline-flex;align-items:center;gap:var(--sp-2);background:var(--acbg);color:var(--ac);border:1px solid var(--line);border-radius:var(--r-pill);padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);cursor:pointer;transition:border-color var(--t-fast)}
 .tema:hover{border-color:var(--ac)}
 .chip{background:var(--acbg);color:var(--ac);border:0;border-radius:var(--r-pill);padding:var(--sp-1) var(--sp-3);font-size:var(--fs-sm);cursor:pointer;margin-right:var(--sp-1)}
-.tema:focus-visible,.btn:focus-visible,.tabs button:focus-visible,.chip:focus-visible,.copiavel:focus-visible,#ptr:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.tema:focus-visible,.btn:focus-visible,.ferramenta:focus-visible,.chip:focus-visible,.copiavel:focus-visible,#ptr:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 
-/* abas e paineis */
-.tabs{display:flex;justify-content:center;gap:var(--sp-1);background:var(--card);border-bottom:1px solid var(--line);padding:0 var(--sp-2);overflow-x:auto}
-.tabs button{background:none;border:0;padding:var(--sp-4);font-size:var(--fs-md);color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color var(--t-fast)}
-.tabs button[aria-selected="true"]{color:var(--ac);border-color:var(--ac)}
+/* ferramentas: cartoes que funcionam como abas (role=tab) */
+.ferramentas-secao{max-width:1040px;margin:0 auto;padding:var(--sp-7) var(--sp-4) 0;text-align:center}
+.ferramentas-titulo{margin:0;font-size:var(--fs-xl)}
+.ferramentas-sub{margin:var(--sp-1) 0 0;font-size:var(--fs-md)}
+.ferramentas{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-top:var(--sp-5);text-align:left}
+.ferramenta{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-2);padding:var(--sp-5);background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:var(--r-lg);font:inherit;text-align:left;cursor:pointer;transition:border-color var(--t-fast),background var(--t-fast)}
+.ferramenta:hover{border-color:var(--ac)}
+.ferramenta[aria-selected="true"]{border-color:var(--ac);background:var(--acbg)}
+.ferramenta-icone{color:var(--ac);flex:none}
+.ferramenta-nome{font-size:var(--fs-lg);font-weight:600}
+.ferramenta-desc{font-size:var(--fs-md);color:var(--mut);line-height:1.4}
+@media (max-width:860px){.ferramentas{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.ferramentas{gap:var(--sp-3)}.ferramenta{padding:var(--sp-4)}.ferramenta-icone{width:24px;height:24px}.ferramenta-desc{font-size:var(--fs-sm)}}
+
+/* paineis */
 .content{max-width:720px;margin:0 auto;padding:var(--sp-6) var(--sp-4)}
 .panel h2{margin:0 0 var(--sp-1)}
 .row{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin:var(--sp-3) 0}

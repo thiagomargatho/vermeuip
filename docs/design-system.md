@@ -9,7 +9,7 @@ Fonte única: `public/assets/app.css`. Sem framework; tema claro/escuro por toke
 | Cor | `--bg --card --tx --mut --line --ac --acbg --ok --okbg --bad --badbg --btntx` | Cada cor é definida **uma vez por tema** (`--l-*` claro, `--d-*` escuro). Componentes só usam os alias sem prefixo |
 | Espaçamento | `--sp-1`…`--sp-9` = 4, 8, 12, 16, 24, 32, 40, 48, 56 px | Nunca valores soltos em `padding`, `margin` ou `gap` |
 | Fonte | `--fs-xs` 12, `-sm` 13, `-md` 14, `-lg` 16, `-xl` 18, `-display` 36 px | O IP grande usa `clamp(30px,8vw,64px)` |
-| Raio | `--r-md` 8 px, `--r-pill` 99 px | |
+| Raio | `--r-md` 8 px, `--r-lg` 12 px (cartões), `--r-pill` 99 px | |
 | Sombra | `--sh-toast` | Só o aviso flutua |
 | Movimento | `--t-fast` .15 s | Desligado com `prefers-reduced-motion: reduce` |
 | Pontos de quebra | 860 px (tablet), 520 px (celular) | `@media` não aceita `var()`; valores fixos |
@@ -25,7 +25,7 @@ Fonte única: `public/assets/app.css`. Sem framework; tema claro/escuro por toke
 | Botão | `.btn` | Ação principal (Testar, Consultar, Copiar IP, Iniciar teste) | hover, `:focus-visible`, `:disabled` (opacidade .6, cursor de espera) |
 | Seletor de tema | `.tema` | Um por página, no cabeçalho | hover, foco, `aria-pressed` |
 | Chip | `.chip` | Atalho de valor (portas 22, 80, 443…) | hover, foco |
-| Aba | `.tabs button[role=tab]` | Trocar de ferramenta sem recarregar | `aria-selected`, foco |
+| Ferramenta (cartão) | `.ferramentas` > `.ferramenta[role=tab]` com `.ferramenta-icone`, `-nome`, `-desc` | Escolher uma das 4 ferramentas, sem recarregar. Faz o papel de aba: o painel `[role=tabpanel]` correspondente aparece embaixo | hover (borda), `aria-selected` (fundo e borda no azul), foco, setas/Home/End. Grade 4 → 2 colunas (860 px) |
 | Campo | `input`, `select` | Entrada de texto/escolha | foco (`:focus-visible`) |
 | Tabela | `table` | Resultado de DNS, whois, portas | — |
 | Valor copiável | `.copiavel`, `td.copiavel`, `.big.copiavel`, `#ip` | Um clique copia; `data-copia` sobrepõe o texto | hover, foco, Enter/Espaço |

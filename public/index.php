@@ -93,12 +93,32 @@ function e(string $s): string
     </div>
 </section>
 
-<nav class="tabs" role="tablist" aria-label="Ferramentas">
-    <button role="tab" aria-selected="true" aria-controls="painel-portas" id="aba-portas">Teste de portas</button>
-    <button role="tab" aria-selected="false" aria-controls="painel-dns" id="aba-dns">Consulta DNS</button>
-    <button role="tab" aria-selected="false" aria-controls="painel-whois" id="aba-whois">Whois</button>
-    <button role="tab" aria-selected="false" aria-controls="painel-vel" id="aba-vel">Velocidade</button>
-</nav>
+<section class="ferramentas-secao" aria-labelledby="ferramentas-titulo">
+    <h2 id="ferramentas-titulo" class="ferramentas-titulo">Ferramentas de rede</h2>
+    <p class="muted ferramentas-sub">Escolha uma ferramenta. Tudo roda aqui mesmo, sem cadastro.</p>
+    <nav class="ferramentas" role="tablist" aria-label="Ferramentas">
+        <button class="ferramenta" role="tab" aria-selected="true" aria-controls="painel-portas" id="aba-portas" type="button">
+            <svg class="ferramenta-icone" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01M11 7h6M11 17h6"/></svg>
+            <span class="ferramenta-nome">Teste de portas</span>
+            <span class="ferramenta-desc">Veja se uma porta do seu IP está aberta.</span>
+        </button>
+        <button class="ferramenta" role="tab" aria-selected="false" aria-controls="painel-dns" id="aba-dns" type="button">
+            <svg class="ferramenta-icone" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>
+            <span class="ferramenta-nome">Consulta DNS</span>
+            <span class="ferramenta-desc">Registros A, MX, TXT, NS e outros.</span>
+        </button>
+        <button class="ferramenta" role="tab" aria-selected="false" aria-controls="painel-whois" id="aba-whois" type="button">
+            <svg class="ferramenta-icone" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M15 10h3.5M15 13.5h3.5"/></svg>
+            <span class="ferramenta-nome">Whois</span>
+            <span class="ferramenta-desc">Titular, datas e servidores de um domínio.</span>
+        </button>
+        <button class="ferramenta" role="tab" aria-selected="false" aria-controls="painel-vel" id="aba-vel" type="button">
+            <svg class="ferramenta-icone" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l4.5-6"/><circle cx="12" cy="17" r="1.2"/></svg>
+            <span class="ferramenta-nome">Velocidade</span>
+            <span class="ferramenta-desc">Download, upload e latência da sua conexão.</span>
+        </button>
+    </nav>
+</section>
 
 <div class="content">
     <section class="panel" id="painel-portas" role="tabpanel" aria-labelledby="aba-portas">

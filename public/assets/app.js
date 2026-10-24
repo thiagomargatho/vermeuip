@@ -63,7 +63,7 @@
   }
 
   /* ---- abas ---- */
-  var abas = $$('.tabs [role=tab]');
+  var abas = $$('.ferramentas [role=tab]');
   function ativarAba(aba) {
     abas.forEach(function (a) {
       var ativa = a === aba;
@@ -71,7 +71,26 @@
       $('#' + a.getAttribute('aria-controls')).hidden = !ativa;
     });
   }
-  abas.forEach(function (aba) { aba.addEventListener('click', function () { ativarAba(aba); }); });
+  abas.forEach(function (aba) {
+    aba.addEventListener('click', function () {
+      ativarAba(aba);
+      // no celular o painel fica abaixo dos cartoes: traz para a tela
+      var painel = $('#' + aba.getAttribute('aria-controls'));
+      var menosMov = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      painel.scrollIntoView({ behavior: menosMov ? 'auto' : 'smooth', block: 'nearest' });
+    });
+  });
+  // setas esquerda/direita (e Home/End) trocam de ferramenta, como em qualquer lista de abas
+  $('.ferramentas').addEventListener('keydown', function (ev) {
+    var i = abas.indexOf(document.activeElement);
+    if (i === -1) return;
+    var novo = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: abas.length - 1 }[ev.key];
+    if (novo === undefined) return;
+    ev.preventDefault();
+    var alvo = abas[(novo + abas.length) % abas.length];
+    ativarAba(alvo);
+    alvo.focus();
+  });
   // links do rodape levam direto para a ferramenta
   $$('[data-aba]').forEach(function (link) {
     link.addEventListener('click', function (ev) {
@@ -79,7 +98,7 @@
       var aba = $('#aba-' + link.getAttribute('data-aba'));
       ativarAba(aba);
       var menosMovimento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      $('.tabs').scrollIntoView({ behavior: menosMovimento ? 'auto' : 'smooth', block: 'start' });
+      $('.ferramentas-secao').scrollIntoView({ behavior: menosMovimento ? 'auto' : 'smooth', block: 'start' });
       aba.focus({ preventScroll: true });
     });
   });
