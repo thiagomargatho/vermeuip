@@ -62,9 +62,10 @@
     botao.disabled = false;
   }
 
-  /* ---- abas ---- */
-  var abas = $$('.ferramentas [role=tab]');
+  /* ---- outras ferramentas: comecam recolhidas; clicar abre, clicar de novo fecha ---- */
+  var abas = $$('.outras-nav [role=tab]');
   function ativarAba(aba) {
+    // aba = null recolhe tudo
     abas.forEach(function (a) {
       var ativa = a === aba;
       a.setAttribute('aria-selected', ativa ? 'true' : 'false');
@@ -73,15 +74,17 @@
   }
   abas.forEach(function (aba) {
     aba.addEventListener('click', function () {
-      ativarAba(aba);
-      // no celular o painel fica abaixo dos cartoes: traz para a tela
+      var jaAberta = aba.getAttribute('aria-selected') === 'true';
+      ativarAba(jaAberta ? null : aba);
+      if (jaAberta) return;
+      // no celular o painel fica abaixo dos botoes: traz para a tela
       var painel = $('#' + aba.getAttribute('aria-controls'));
       var menosMov = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       painel.scrollIntoView({ behavior: menosMov ? 'auto' : 'smooth', block: 'nearest' });
     });
   });
-  // setas esquerda/direita (e Home/End) trocam de ferramenta, como em qualquer lista de abas
-  $('.ferramentas').addEventListener('keydown', function (ev) {
+  // setas esquerda/direita (e Home/End) movem entre as ferramentas, como em qualquer lista de abas
+  $('.outras-nav').addEventListener('keydown', function (ev) {
     var i = abas.indexOf(document.activeElement);
     if (i === -1) return;
     var novo = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: abas.length - 1 }[ev.key];
@@ -90,17 +93,6 @@
     var alvo = abas[(novo + abas.length) % abas.length];
     ativarAba(alvo);
     alvo.focus();
-  });
-  // links do rodape levam direto para a ferramenta
-  $$('[data-aba]').forEach(function (link) {
-    link.addEventListener('click', function (ev) {
-      ev.preventDefault();
-      var aba = $('#aba-' + link.getAttribute('data-aba'));
-      ativarAba(aba);
-      var menosMovimento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      $('.ferramentas-secao').scrollIntoView({ behavior: menosMovimento ? 'auto' : 'smooth', block: 'start' });
-      aba.focus({ preventScroll: true });
-    });
   });
 
   /* ---- tema claro/escuro: comeca no do sistema; o clique grava a escolha ---- */

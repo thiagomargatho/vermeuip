@@ -140,6 +140,7 @@ window.vermeuip.speed = { run: function (onProgress) {
 
   botao.addEventListener('click', async function () {
     botao.disabled = true;
+    botao.textContent = 'Medindo…';
     mostrar({}, true);
     try {
       var final = await window.vermeuip.speed.run(function (d) { mostrar(d, true); });
@@ -148,5 +149,6 @@ window.vermeuip.speed = { run: function (onProgress) {
       window.vermeuip.mostrarErro(saida, e.message);
     }
     botao.disabled = false;
+    botao.textContent = 'Testar novamente';
   });
 })();
