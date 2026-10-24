@@ -15,6 +15,12 @@ $engine = $config['SPEED_ENGINE'];
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 
+/** URL do arquivo com a data de modificacao: o navegador baixa de novo sempre que o arquivo muda. */
+function v(string $arquivo): string
+{
+    return $arquivo . '?v=' . (@filemtime(__DIR__ . '/' . $arquivo) ?: 1);
+}
+
 function e(string $s): string
 {
     return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -68,7 +74,7 @@ function e(string $s): string
     // aplica o tema salvo antes de pintar a pagina (evita piscar claro->escuro)
     try { var t = localStorage.getItem('tema'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
 </script>
-<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="<?= v('assets/app.css') ?>">
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -163,7 +169,7 @@ function e(string $s): string
 
 <div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/app.js" defer></script>
-<script type="module" src="assets/speed.js"></script>
+<script src="<?= v('assets/app.js') ?>" defer></script>
+<script type="module" src="<?= v('assets/speed.js') ?>"></script>
 </body>
 </html>
