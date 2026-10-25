@@ -94,7 +94,7 @@ function e(string $s): string
 <section class="hero" aria-labelledby="ip-label">
     <a class="marca" href="/" aria-label="VerMeuIP, página inicial">
         <img class="logo logo-claro" src="assets/marca/logo.png" width="645" height="448" alt="VerMeuIP" fetchpriority="high">
-        <img class="logo logo-escuro" src="assets/marca/logo-escuro.png" width="188" height="133" alt="VerMeuIP">
+        <img class="logo logo-escuro" src="assets/marca/logo-escuro.png" width="645" height="448" alt="VerMeuIP">
     </a>
 
     <h1 class="rotulo" id="ip-label">Qual é o meu IP? <span>Seu endereço <?= $ipv6 ? 'IPv6' : 'IPv4' ?></span></h1>

@@ -138,12 +138,34 @@ salvar($completo, "$saida/logo.png");
 $marca = aparar(fundoClaroParaAlpha(recorte($prancha, 20, 90, 700, 330)), 2);
 salvar($marca, "$saida/marca.png");
 
-// 3) variacao oficial para fundo escuro (caixa x 486..711, y 724..912); usa o miolo para evitar os cantos arredondados
-$miolo = recorte($prancha, 498, 736, 201, 165);
-$fundoEscuro = rgb($prancha, 500, 740);
-$escuro = aparar(fundoEscuroParaAlpha($miolo, $fundoEscuro), 2);
+// 3) variacao para fundo escuro: recolore a PROPRIA arte em alta resolucao (nao redesenha nada).
+//    O azul-marinho vira branco; o gradiente (amarelo/laranja/vermelho/rosa) fica igual.
+//    Pixels que misturam marinho e cor (sombra do "1") trocam so a parte marinha por branco.
+function marinhoParaBranco(GdImage $im): GdImage
+{
+    $w = imagesx($im);
+    $h = imagesy($im);
+    $out = imagecreatetruecolor($w, $h);
+    imagealphablending($out, false);
+    imagesavealpha($out, true);
+    $navy = [11, 31, 68];
+    for ($y = 0; $y < $h; $y++) {
+        for ($x = 0; $x < $w; $x++) {
+            $c = imagecolorat($im, $x, $y);
+            $a = ($c >> 24) & 127;
+            [$r, $g, $b] = [($c >> 16) & 255, ($c >> 8) & 255, $c & 255];
+            // peso do marinho: o vermelho vai de 11 (marinho) a ~240 (cores quentes)
+            $peso = max(0.0, min(1.0, 1 - ($r - $navy[0]) / (240 - $navy[0])));
+            $r2 = (int) round(min(255, max(0, $r + $peso * (255 - $navy[0]))));
+            $g2 = (int) round(min(255, max(0, $g + $peso * (255 - $navy[1]))));
+            $b2 = (int) round(min(255, max(0, $b + $peso * (255 - $navy[2]))));
+            imagesetpixel($out, $x, $y, imagecolorallocatealpha($out, $r2, $g2, $b2, $a));
+        }
+    }
+    return $out;
+}
+$escuro = marinhoParaBranco($completo);
 salvar($escuro, "$saida/logo-escuro.png");
-printf("fundo da variacao escura: #%02X%02X%02X\n", ...$fundoEscuro);
 
 // 4) favicons a partir do simbolo
 $quadrado = function (GdImage $simbolo, int $lado, ?array $fundo = null, float $folga = 0.12): GdImage {

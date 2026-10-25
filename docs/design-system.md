@@ -18,7 +18,7 @@ Fonte única: `public/assets/app.css`. Sem framework. Identidade visual aprovada
 | `assets/marca/marca.png` | Só o símbolo "IP" (base dos ícones) |
 | `favicon-32.png`, `favicon-192.png`, `apple-touch-icon.png`, `og.png` | Ícones e imagem de compartilhamento |
 
-Os arquivos são **recortes da arte aprovada**, gerados por `php scripts/gerar-logo.php` (fundo removido, sem redesenhar nem usar texto comum). Se houver o arquivo vetorial/PNG original em alta resolução, substitua `logo*.png` por ele: a variação escura saiu pequena (188 px de largura) por vir da prancha.
+Os arquivos são **recortes da arte aprovada**, gerados por `php scripts/gerar-logo.php` (fundo removido, sem redesenhar nem usar texto comum). Se houver o arquivo vetorial/PNG original em alta resolução, substitua `logo*.png` por ele: a variação escura é a mesma arte do logo claro com o azul-marinho trocado por branco (mesma resolução, 645 px).
 
 ## Tokens
 
