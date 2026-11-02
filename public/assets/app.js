@@ -64,6 +64,7 @@
 
   /* ---- outras ferramentas: comecam recolhidas; clicar abre, clicar de novo fecha ---- */
   var abas = $$('.outras-nav [role=tab]');
+  var navAbas = $('.outras-nav');
   function ativarAba(aba) {
     // aba = null recolhe tudo
     abas.forEach(function (a) {
@@ -84,7 +85,7 @@
     });
   });
   // setas esquerda/direita (e Home/End) movem entre as ferramentas, como em qualquer lista de abas
-  $('.outras-nav').addEventListener('keydown', function (ev) {
+  if (navAbas) navAbas.addEventListener('keydown', function (ev) {
     var i = abas.indexOf(document.activeElement);
     if (i === -1) return;
     var novo = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: abas.length - 1 }[ev.key];
@@ -159,10 +160,11 @@
     var alvo = ev.target.closest && ev.target.closest('.copiavel, #ptr');
     if (alvo) { ev.preventDefault(); copiarValor(alvo.getAttribute('data-copia') || alvo.textContent); }
   });
-  $('#copiar').addEventListener('click', function () { copiarValor($('#ip').textContent); });
+  var botaoCopiar = $('#copiar');
+  if (botaoCopiar) botaoCopiar.addEventListener('click', function () { copiarValor($('#ip').textContent); });
 
   /* ---- geolocalização (chega depois do IP) ---- */
-  fetch('api/geo.php').then(function (r) { return r.json(); }).then(function (g) {
+  if ($('#local')) fetch('/api/geo.php').then(function (r) { return r.json(); }).then(function (g) {
     var partes = [g.cidade, g.uf, g.pais].filter(Boolean).join(', ');
     var prov = g.isp ? g.isp + (g.asn ? ' (AS' + g.asn + ')' : '') : '';
     var texto = [partes, prov].filter(Boolean).join(' · ');
@@ -172,13 +174,13 @@
 
   /* ---- teste de portas ---- */
   var formPortas = $('#form-portas'), outPortas = $('#out-portas');
-  $$('.chip[data-porta]').forEach(function (c) {
+  if (formPortas) $$('.chip[data-porta]').forEach(function (c) {
     c.addEventListener('click', function () { formPortas.porta.value = c.getAttribute('data-porta'); formPortas.requestSubmit(); });
   });
-  formPortas.addEventListener('submit', function (ev) {
+  if (formPortas) formPortas.addEventListener('submit', function (ev) {
     ev.preventDefault();
     executar($('button[type=submit]', formPortas), outPortas, async function () {
-      var d = await chamar('api/ports.php', {
+      var d = await chamar('/api/ports.php', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ porta: formPortas.porta.value.trim() })
       });
@@ -190,11 +192,11 @@
 
   /* ---- DNS ---- */
   var formDns = $('#form-dns'), outDns = $('#out-dns');
-  formDns.addEventListener('submit', function (ev) {
+  if (formDns) formDns.addEventListener('submit', function (ev) {
     ev.preventDefault();
     executar($('button[type=submit]', formDns), outDns, async function () {
       var q = new URLSearchParams({ dominio: limparDominio(formDns.dominio.value), tipo: formDns.tipo.value });
-      var d = await chamar('api/dns.php?' + q);
+      var d = await chamar('/api/dns.php?' + q);
       if (!d.registros.length) return mostrarErro(outDns, 'Nenhum registro encontrado.');
       outDns.replaceChildren(tabela(['Tipo', 'Valor', 'TTL'], d.registros.map(function (r) { return [r.tipo, r.valor, r.ttl]; })));
     });
@@ -202,10 +204,10 @@
 
   /* ---- Whois ---- */
   var formWhois = $('#form-whois'), outWhois = $('#out-whois');
-  formWhois.addEventListener('submit', function (ev) {
+  if (formWhois) formWhois.addEventListener('submit', function (ev) {
     ev.preventDefault();
     executar($('button[type=submit]', formWhois), outWhois, async function () {
-      var d = await chamar('api/whois.php?' + new URLSearchParams({ dominio: limparDominio(formWhois.dominio.value) }));
+      var d = await chamar('/api/whois.php?' + new URLSearchParams({ dominio: limparDominio(formWhois.dominio.value) }));
       outWhois.replaceChildren(tabela(['Campo', 'Valor'], [
         ['Domínio', d.dominio], ['Titular', d.titular], ['Registrado em', d.registrado_em],
         ['Expira em', d.expira_em], ['Status', (d.status || []).join(', ')],

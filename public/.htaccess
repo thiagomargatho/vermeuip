@@ -15,3 +15,25 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 <FilesMatch "\.(mmdb|lock|json)$">
     Require all denied
 </FilesMatch>
+
+# Compressao de texto (HTML, CSS, JS, JSON, SVG)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/javascript text/javascript application/json image/svg+xml
+</IfModule>
+
+# Cache do navegador: arquivos estaticos por 7 dias; css/js chamados com ?v=<data do arquivo>
+# (ver v() em _lib/layout.php) mudam de URL quando mudam, entao ficam por 1 ano.
+# As paginas PHP mandam Cache-Control: no-store e nao sao afetadas.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|png|webp|svg|ico|woff2?)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+</IfModule>
+<IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+        SetEnvIf Query_String "^v=[0-9]+$" versionado
+        <FilesMatch "\.(css|js)$">
+            Header set Cache-Control "public, max-age=31536000, immutable" env=versionado
+        </FilesMatch>
+    </IfModule>
+</IfModule>

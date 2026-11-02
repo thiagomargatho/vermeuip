@@ -65,7 +65,7 @@ function loadScript(src) {
 }
 
 async function runLibreSpeed(onProgress) {
-  await loadScript('speedtest/speedtest.js');
+  await loadScript('/speedtest/speedtest.js');
   return new Promise(function (resolve) {
     var st = new window.Speedtest();
     var num = function (v) { var n = parseFloat(v); return isNaN(n) || n <= 0 ? null : n; };
@@ -76,7 +76,7 @@ async function runLibreSpeed(onProgress) {
     st.setParameter('telemetry_level', 'off');
     st.setParameter('getIp_ispInfo', false);
     st.setSelectedServer({
-      name: 'Este servidor', server: 'speedtest/backend/',
+      name: 'Este servidor', server: '/speedtest/backend/',
       dlURL: 'garbage.php', ulURL: 'empty.php', pingURL: 'empty.php', getIpURL: 'getIP.php'
     });
     st.onupdate = function (d) { last = snap(d); onProgress(last); };
@@ -99,6 +99,7 @@ window.vermeuip.speed = { run: function (onProgress) {
   var painel = document.getElementById('painel-vel');
   var botao = document.getElementById('iniciar-vel');
   var saida = document.getElementById('out-vel');
+  if (!botao) return;
   var fmt = function (v, casas) { return v == null ? '—' : v.toFixed(casas); };
 
   function metrica(rotulo, valor, unidade) {

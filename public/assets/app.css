@@ -132,5 +132,25 @@ td.copiavel:hover{background:var(--surface)}
   .metrics{grid-template-columns:1fr 1fr}
 }
 
+/* paginas de ferramenta: texto de apoio, links entre ferramentas */
+.topo-pagina{justify-content:space-between;align-items:center}
+.topo-pagina .logo{width:72px;margin:0}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.pagina{max-width:720px;margin:0 auto;padding:var(--sp-5) var(--sp-4) var(--sp-8)}
+.pagina h1{margin:0 0 var(--sp-3);font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.15}
+.lead{margin:0 0 var(--sp-5);font-size:var(--fs-xl);color:var(--muted);line-height:1.45}
+.pagina .velocidade{margin:var(--sp-5) 0 var(--sp-7);text-align:center}
+.pagina .panel{margin:var(--sp-4) 0 var(--sp-7)}
+.texto h2,.relacionadas h2{margin:var(--sp-7) 0 var(--sp-3);font-size:var(--fs-xl)}
+.texto p,.texto li,.texto dd{line-height:1.65}
+.texto dt{margin-top:var(--sp-4);font-weight:700}
+.texto dd{margin:var(--sp-1) 0 0}
+.texto ul{padding-left:var(--sp-5)}
+.relacionadas{border-top:1px solid var(--line);margin-top:var(--sp-8)}
+.relacionadas ul{list-style:none;padding:0;margin:0}
+.relacionadas li{padding:var(--sp-3) 0;border-bottom:1px solid var(--line)}
+.relacionadas li a{font-weight:600;margin-right:var(--sp-2)}
+.rodape-nav{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-5);justify-content:center;margin:0 auto var(--sp-4)}
+
 /* quem pede menos movimento nao recebe transicoes nem rolagem suave */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
