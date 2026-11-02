@@ -1,8 +1,13 @@
 DirectoryIndex index.php
 Options -Indexes
 
-# HTTP -> HTTPS (exceto o desafio .well-known da renovacao automatica do certificado)
+# www -> dominio sem www, ja em HTTPS (exceto o desafio .well-known da renovacao do certificado)
 RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.vermeuip\.com\.br$ [NC]
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^ https://vermeuip.com.br%{REQUEST_URI} [L,R=301]
+
+# HTTP -> HTTPS (exceto o desafio .well-known da renovacao automatica do certificado)
 RewriteCond %{HTTPS} off
 RewriteCond %{REQUEST_URI} !^/\.well-known/
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
