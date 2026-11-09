@@ -216,6 +216,58 @@
     });
   });
 
+  /* ---- localizar IP ---- */
+  var formIp = $('#form-ip'), outIp = $('#out-ip');
+  if (formIp) formIp.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    executar($('button[type=submit]', formIp), outIp, async function () {
+      var d = await chamar('/api/ip.php?' + new URLSearchParams({ ip: formIp.ip.value.trim() }));
+      var local = [d.cidade, d.uf, d.pais].filter(Boolean).join(', ');
+      outIp.replaceChildren(tabela(['Campo', 'Valor'], [
+        ['IP', d.ip], ['Localização aproximada', local], ['Provedor', d.isp],
+        ['ASN', d.asn ? 'AS' + d.asn : ''], ['IP reverso', d.ptr]
+      ], [0]));
+    });
+  });
+
+  /* ---- teste de CGNAT ---- */
+  var formCgnat = $('#form-cgnat'), outCgnat = $('#out-cgnat');
+  if (formCgnat) formCgnat.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    executar($('button[type=submit]', formCgnat), outCgnat, async function () {
+      var d = await chamar('/api/cgnat.php?' + new URLSearchParams({ wan: formCgnat.wan.value.trim() }));
+      var classe = { sem_cgnat: ' ok', cgnat: ' bad', nat_duplo: ' bad' }[d.veredito] || '';
+      outCgnat.replaceChildren(
+        el('p', { 'class': 'veredito' + classe, role: 'status', text: d.mensagem }),
+        tabela(['Campo', 'Valor'], [['IP WAN do roteador', d.wan], ['IP visto na internet', d.ip_publico]], [0])
+      );
+    });
+  });
+
+  /* ---- propagacao de DNS ---- */
+  var formProp = $('#form-prop'), outProp = $('#out-prop');
+  if (formProp) formProp.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    executar($('button[type=submit]', formProp), outProp, async function () {
+      var q = new URLSearchParams({ dominio: limparDominio(formProp.dominio.value), tipo: formProp.tipo.value });
+      var d = await chamar('/api/propagacao.php?' + q);
+      var responderam = d.resultados.filter(function (r) { return r.ok; });
+      var algumValor = responderam.some(function (r) { return r.valores.length; });
+      var resumo, classe = '';
+      if (!responderam.length) { resumo = 'Nenhum resolvedor respondeu. Tente novamente em instantes.'; classe = ' bad'; }
+      else if (!d.consistente) { resumo = 'As respostas diferem: a mudança ainda está propagando.'; classe = ' bad'; }
+      else if (!algumValor) { resumo = 'Todos responderam que não há registro ' + d.tipo + ' para ' + d.dominio + '.'; }
+      else { resumo = 'Propagado: todos os resolvedores que responderam devolvem o mesmo valor.'; classe = ' ok'; }
+      outProp.replaceChildren(
+        el('p', { 'class': 'veredito' + classe, role: 'status', text: resumo }),
+        tabela(['Resolvedor', 'Resposta', 'TTL'], d.resultados.map(function (r) {
+          if (!r.ok) return [r.resolvedor, el('span', { 'class': 'tag bad', text: 'Sem resposta' }), ''];
+          return [r.resolvedor, r.valores.length ? r.valores.join(', ') : el('span', { 'class': 'muted', text: 'Sem registro' }), r.ttl];
+        }), [0])
+      );
+    });
+  });
+
   window.vermeuip = window.vermeuip || {};
   window.vermeuip.mostrarErro = mostrarErro;
   window.vermeuip.tabela = tabela;

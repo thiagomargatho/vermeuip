@@ -1,6 +1,8 @@
 ﻿# vermeuip.com.br
 
-Site em português com IP do visitante, localização aproximada, provedor, IP reverso e quatro ferramentas: teste de portas, consulta DNS, whois (RDAP) e teste de velocidade. PHP 8 + HTML/CSS/JS puro, feito para hospedagem cPanel compartilhada.
+**https://vermeuip.com.br** — site em português, sem anúncios, com o IP do visitante, localização aproximada, provedor e IP reverso. Cada ferramenta tem a sua página: teste de velocidade, teste de portas, teste de CGNAT, consulta DNS, propagação de DNS, whois (RDAP), localizar IP e user agent. PHP 8 + HTML/CSS/JS puro, feito para hospedagem cPanel compartilhada.
+
+Para criar uma ferramenta nova: adicione o slug em `FERRAMENTAS` (`public/_lib/layout.php`), crie `public/<slug>/index.php` e inclua a URL em `public/sitemap.xml`. O teste `ToolPagesTest` falha se faltar um dos três. Textos de divulgação: `docs/divulgacao.md`.
 
 Design: `docs/superpowers/specs/2026-10-23-vermeuip-design.md` · Plano: `docs/superpowers/plans/2026-10-23-vermeuip.md`
 

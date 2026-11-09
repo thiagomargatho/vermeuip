@@ -152,5 +152,20 @@ td.copiavel:hover{background:var(--surface)}
 .relacionadas li a{font-weight:600;margin-right:var(--sp-2)}
 .rodape-nav{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-5);justify-content:center;margin:0 auto var(--sp-4)}
 
+/* home: lista de ferramentas com link e perguntas frequentes (recolhidas) */
+.lista-ferramentas{list-style:none;padding:0;margin:var(--sp-6) 0 0;text-align:left}
+.lista-ferramentas li{padding:var(--sp-3) 0;border-top:1px solid var(--line)}
+.lista-ferramentas a{font-weight:600;margin-right:var(--sp-2)}
+.perguntas{max-width:720px;margin:var(--sp-8) auto 0;padding:var(--sp-6) var(--sp-4) 0;border-top:1px solid var(--line)}
+.perguntas .outras-titulo{text-align:center}
+.perguntas details{border-bottom:1px solid var(--line)}
+.perguntas summary{padding:var(--sp-4) 0;font-weight:600;cursor:pointer}
+.perguntas summary:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.perguntas details p{margin:0 0 var(--sp-4);color:var(--muted);line-height:1.65}
+/* resultado em destaque (veredito do teste de CGNAT, resumo da propagacao) */
+.veredito{margin-top:var(--sp-3);padding:var(--sp-4);border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);line-height:1.6}
+.veredito.ok{background:var(--okbg);color:var(--ok);border-color:transparent}
+.veredito.bad{background:var(--badbg);color:var(--bad);border-color:transparent}
+
 /* quem pede menos movimento nao recebe transicoes nem rolagem suave */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}

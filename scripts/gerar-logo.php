@@ -167,6 +167,13 @@ function marinhoParaBranco(GdImage $im): GdImage
 $escuro = marinhoParaBranco($completo);
 salvar($escuro, "$saida/logo-escuro.png");
 
+// 3b) versoes WebP para a pagina: 336 px = 2x a largura exibida (168 px), bem mais leves que os PNG
+foreach (['logo' => $completo, 'logo-escuro' => $escuro] as $nome => $img) {
+    $menor = redimensionar($img, 336);
+    imagewebp($menor, "$saida/$nome.webp", 82);
+    printf("%-22s %4dx%-4d %6.1f KB\n", "$nome.webp", imagesx($menor), imagesy($menor), filesize("$saida/$nome.webp") / 1024);
+}
+
 // 4) favicons a partir do simbolo
 $quadrado = function (GdImage $simbolo, int $lado, ?array $fundo = null, float $folga = 0.12): GdImage {
     $out = imagecreatetruecolor($lado, $lado);

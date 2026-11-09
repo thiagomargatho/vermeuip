@@ -18,6 +18,10 @@ const FERRAMENTAS = [
     'teste-de-portas' => ['Teste de portas', 'Veja se uma porta do seu IP está aberta'],
     'consulta-dns' => ['Consulta DNS', 'Registros A, MX, TXT e outros de qualquer domínio'],
     'whois' => ['Whois de domínio', 'Datas, status e servidores de nomes'],
+    'localizar-ip' => ['Localizar IP', 'Cidade, país e provedor de qualquer IP'],
+    'cgnat' => ['Teste de CGNAT', 'Descubra se o seu provedor usa CGNAT'],
+    'propagacao-dns' => ['Propagação de DNS', 'Compare a resposta de vários resolvedores públicos'],
+    'meu-user-agent' => ['Meu user agent', 'User agent e cabeçalhos HTTP do seu navegador'],
 ];
 
 function e(string $s): string
@@ -103,8 +107,8 @@ function pagina_topo(array $m): void
 <header class="topo<?= !empty($m['logo_no_topo']) ? ' topo-pagina' : '' ?>">
 <?php if (!empty($m['logo_no_topo'])): ?>
     <a class="marca" href="/" aria-label="VerMeuIP, página inicial">
-        <img class="logo logo-claro" src="/assets/marca/logo.png" width="645" height="448" alt="VerMeuIP">
-        <img class="logo logo-escuro" src="/assets/marca/logo-escuro.png" width="645" height="448" alt="VerMeuIP">
+        <img class="logo logo-claro" src="/assets/marca/logo.webp" width="336" height="233" alt="VerMeuIP">
+        <img class="logo logo-escuro" src="/assets/marca/logo-escuro.webp" width="336" height="233" alt="VerMeuIP">
     </a>
 <?php endif; ?>
     <button class="tema" id="tema" type="button" aria-label="Alternar entre tema claro e escuro">
