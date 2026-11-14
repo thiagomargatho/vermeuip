@@ -53,6 +53,29 @@ function runCloudflare(onProgress) {
   });
 }
 
+/*
+ * So latencia: 20 requisicoes pequenas ao servidor Cloudflare mais proximo.
+ * -> Promise<{latencia_ms, jitter_ms, min_ms, max_ms, amostras}>
+ */
+function runPing() {
+  return new Promise(function (resolve, reject) {
+    var engine = new CloudflareSpeedTest({ autoStart: false, measurements: [{ type: 'latency', numPackets: 20 }] });
+    engine.onFinish = function (r) {
+      var pontos = (r.getUnloadedLatencyPoints() || []).filter(function (p) { return typeof p === 'number'; });
+      if (!pontos.length || r.getUnloadedLatency() == null) return reject(new Error('O teste de ping falhou. Tente novamente.'));
+      resolve({
+        latencia_ms: r.getUnloadedLatency(),
+        jitter_ms: r.getUnloadedJitter(),
+        min_ms: Math.min.apply(null, pontos),
+        max_ms: Math.max.apply(null, pontos),
+        amostras: pontos.length
+      });
+    };
+    engine.onError = function () { reject(new Error('O teste de ping falhou. Tente novamente.')); };
+    engine.play();
+  });
+}
+
 function loadScript(src) {
   return new Promise(function (resolve, reject) {
     if (window.Speedtest) return resolve();
@@ -99,7 +122,6 @@ window.vermeuip.speed = { run: function (onProgress) {
   var painel = document.getElementById('painel-vel');
   var botao = document.getElementById('iniciar-vel');
   var saida = document.getElementById('out-vel');
-  if (!botao) return;
   var fmt = function (v, casas) { return v == null ? '—' : v.toFixed(casas); };
 
   function metrica(rotulo, valor, unidade) {
@@ -139,7 +161,7 @@ window.vermeuip.speed = { run: function (onProgress) {
     saida.replaceChildren(wrap, nota);
   }
 
-  botao.addEventListener('click', async function () {
+  if (botao) botao.addEventListener('click', async function () {
     botao.disabled = true;
     botao.textContent = 'Medindo…';
     mostrar({}, true);
@@ -151,5 +173,44 @@ window.vermeuip.speed = { run: function (onProgress) {
     }
     botao.disabled = false;
     botao.textContent = 'Testar novamente';
+  });
+
+  /* ---- pagina de teste de ping ---- */
+  var botaoPing = document.getElementById('iniciar-ping');
+  var saidaPing = document.getElementById('out-ping');
+
+  function avaliar(ms) {
+    if (ms <= 20) return ['ok', 'Excelente: ótimo para jogos online e videochamadas.'];
+    if (ms <= 50) return ['ok', 'Bom: jogos online e videochamadas funcionam bem.'];
+    if (ms <= 100) return ['', 'Aceitável: serve para navegar e assistir vídeos; jogos rápidos podem ter atraso.'];
+    return ['bad', 'Alto: jogos online e chamadas tendem a ter atraso perceptível.'];
+  }
+
+  if (botaoPing) botaoPing.addEventListener('click', async function () {
+    botaoPing.disabled = true;
+    botaoPing.textContent = 'Medindo…';
+    saidaPing.replaceChildren();
+    try {
+      var d = await runPing();
+      var nota = avaliar(d.latencia_ms);
+      var veredito = document.createElement('p');
+      veredito.className = 'veredito' + (nota[0] ? ' ' + nota[0] : '');
+      veredito.setAttribute('role', 'status');
+      veredito.textContent = nota[1];
+      var wrap = document.createElement('div');
+      wrap.className = 'metrics';
+      wrap.appendChild(metrica('Ping', fmt(d.latencia_ms, 0), 'ms'));
+      wrap.appendChild(metrica('Jitter', fmt(d.jitter_ms, 1), 'ms'));
+      wrap.appendChild(metrica('Mínimo', fmt(d.min_ms, 0), 'ms'));
+      wrap.appendChild(metrica('Máximo', fmt(d.max_ms, 0), 'ms'));
+      var obs = document.createElement('p');
+      obs.className = 'muted small';
+      obs.textContent = d.amostras + ' medições até o servidor da Cloudflare mais próximo de você.';
+      saidaPing.replaceChildren(wrap, veredito, obs);
+    } catch (e) {
+      window.vermeuip.mostrarErro(saidaPing, e.message);
+    }
+    botaoPing.disabled = false;
+    botaoPing.textContent = 'Testar novamente';
   });
 })();

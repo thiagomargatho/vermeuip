@@ -15,6 +15,7 @@ const SITE_URL = 'https://vermeuip.com.br';
 /** Ferramentas com pagina propria: slug => [rotulo, descricao curta]. */
 const FERRAMENTAS = [
     'teste-de-velocidade' => ['Teste de velocidade', 'Download, upload e latência da sua internet'],
+    'teste-de-ping' => ['Teste de ping', 'Latência e jitter da sua conexão'],
     'teste-de-portas' => ['Teste de portas', 'Veja se uma porta do seu IP está aberta'],
     'consulta-dns' => ['Consulta DNS', 'Registros A, MX, TXT e outros de qualquer domínio'],
     'whois' => ['Whois de domínio', 'Datas, status e servidores de nomes'],
@@ -96,6 +97,8 @@ function pagina_topo(array $m): void
 </script>
 <link rel="stylesheet" href="<?= v('assets/app.css') ?>">
 <script type="text/javascript">
+    // no ambiente local (testes) o Clarity nao carrega, para nao misturar com as visitas reais
+    if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
